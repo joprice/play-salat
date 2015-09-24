@@ -27,16 +27,20 @@ It will ask you a couple of questions, and your ready to rock 'n roll.
 ### Manual installation
 Start by adding the plugin, in your `project/Build.scala`
 
+```scala
     val appDependencies = Seq(
       "se.radley" %% "play-plugins-salat" % "1.5.0"
     )
+```
 
 Then we can add the implicit converstions to and from ObjectId by adding to the routesImport and add ObjectId to all the templates
 
+```scala
     val main = PlayProject(appName, appVersion, appDependencies, mainLang = SCALA).settings(
       routesImport += "se.radley.plugin.salat.Binders._",
       templatesImport += "org.bson.types.ObjectId"
     )
+```
 
 We now need to register the plugin, this is done by creating(or appending) to the `conf/play.plugins` file
 
@@ -112,6 +116,7 @@ Then you can call `mongoCollection("collectionname", "myotherdb")`
 ## What a model looks like
 All models must be case classes otherwise salat doesn't know how to properly transform them into MongoDBObject's
 
+```scala
     package models
 
     import play.api.Play.current
@@ -140,10 +145,12 @@ All models must be case classes otherwise salat doesn't know how to properly tra
       def findOneByUsername(username: String): Option[User] = dao.findOne(MongoDBObject("username" -> username))
       def findByCountry(country: String) = dao.find(MongoDBObject("address.country" -> country))
     }
+```
 
 ## Capped Collections
 If you want to use capped collections check this out
 
+```scala
     package models
 
     import play.api.Play.current
@@ -163,10 +170,12 @@ If you want to use capped collections check this out
     object LogItem extends ModelCompanion[LogItem, ObjectId] {
       val dao = new SalatDAO[LogItem, ObjectId](collection = mongoCappedCollection("logitems", 1000)) {}
     }
+```
 
 ## GridFS
 If you want to store things in gridfs you can do this
 
+```scala
     package models
 
     import play.api.Play.current
@@ -174,6 +183,7 @@ If you want to store things in gridfs you can do this
     import mongoContext._
 
     val files = gridFS("myfiles")
+```
 
 
 ## Mongo Context
